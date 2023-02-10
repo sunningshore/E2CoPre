@@ -17,6 +17,10 @@ function B = BoundMirrorExpand(A)
 %     8  7  8  9  13  9 
 %     5  4  5  6  12  6
 %
+
+% Chenyang Xu and Jerry L. Prince, 9/9/1999
+% http://iacl.ece.jhu.edu/projects/gvf
+
 [m,n] = size(A);
 yi = 2:m+1;
 xi = 2:n+1;

@@ -21,6 +21,10 @@ function B = BoundMirrorEnsure(A)
 %     8  7  8  9  13  9 
 %     5  4  5  6  12  6
 %
+
+% Chenyang Xu and Jerry L. Prince, 9/9/1999
+% http://iacl.ece.jhu.edu/projects/gvf
+
 [m,n] = size(A);
 
 if (m<3 | n<3) 

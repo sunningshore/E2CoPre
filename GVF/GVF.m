@@ -1,4 +1,22 @@
 function [px,py,u,v] = GVF(f, mu, ITER) 
+%GVF Compute gradient vector flow.
+%   [u,v] = GVF(f, mu, ITER) computes the
+%   GVF of an edge map f.  mu is the GVF regularization coefficient
+%   and ITER is the number of iterations that will be computed.  
+
+%   Chenyang Xu and Jerry L. Prince 6/17/97
+%   Copyright (c) 1996-99 by Chenyang Xu and Jerry L. Prince
+%   Image Analysis and Communications Lab, Johns Hopkins University
+
+%   modified on 9/9/99 by Chenyang Xu
+%   MATLAB do not deal their boundary condition for gradient and del2 
+%   consistently between MATLAB 4.2 and MATLAB 5. Hence I modify
+%   the function to take care of this issue by the code itself.
+%   Also, in the previous version, the input "f" is assumed to have been
+%   normalized to the range [0,1] before the function is called. 
+%   In this version, "f" is normalized inside the function to avoid 
+%   potential error of inputing an unnormalized "f".
+
 % clear;
 % clc; 
 % mu=0.2; 
