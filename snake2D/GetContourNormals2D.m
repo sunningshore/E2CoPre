@@ -10,6 +10,8 @@ function N=GetContourNormals2D(P)
 % outputs,
 %  N : List with contour normals M x 2
 %
+% Function is written by D.Kroon University of Twente (July 2010)
+
 % Use the n'th neighbour to calculate the normal (more stable)
 a=4;
 

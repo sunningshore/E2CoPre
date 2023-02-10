@@ -10,6 +10,8 @@ function [b,A,B]=SnakeInternalForceMatrix2D(nPoints,alpha,beta,gamma)
 %
 % outputs,
 %   B : The Snake Smoothness regulation matrix
+%
+% Function is written by D.Kroon University of Twente (July 2010)
 
 % Penta diagonal matrix, one row:
 b(1)=beta;

@@ -11,6 +11,8 @@ function J=ImageDerivatives2D(I,sigma,type)
 % outputs,
 %   J : The image derivative 
 %
+% Function is written by D.Kroon University of Twente (July 2010)
+
 % Make derivatives kernels
 [x,y]=ndgrid(floor(-3*sigma):ceil(3*sigma),floor(-3*sigma):ceil(3*sigma));
 

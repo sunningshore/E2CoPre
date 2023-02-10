@@ -1,7 +1,18 @@
 function [PreorderLow, PreorderUp, P, Fext]=Snake2D(I, P, x0Temp, y0Temp, posIniDest, iteration)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% This function SNAKE implements the basic snake segmentation. A snake is an 
+% active (moving) contour, in which the points are attracted by edges and
+% other boundaries. To keep the contour smooth, an membrame and thin plate
+% energy is used as regularization.
+%
 % [O,J]=Snake2D(I,P,Options)
 %  
+% Literature: 
+% - Michael Kass, Andrew Witkin and Demetri TerzoPoulos "Snakes Active Contour Models", 1987 
+% - Jim Invins and John Porril, "Everything you always wanted to know about snakes (but were afraid to ask) 
+% - Chenyang Xu and Jerry L. Prince, "Gradient Vector Flow: A New external force for Snakes 
+% - Christoph Lurig, Leif Kobbelt, Thomas Ertl, "Hierachical solutions for the Deformable Surface Problem in Visualization"
+% 
 % inputs,
 %   I : An Image of type double preferable ranged [0..1]
 %   P : List with coordinates descriping the rough contour N x 2
@@ -39,7 +50,38 @@ function [PreorderLow, PreorderUp, P, Fext]=Snake2D(I, P, x0Temp, y0Temp, posIni
 %  Options.Beta : Thin plate energy (second order), default 0.2
 %  Options.Delta : Baloon force, default 0.1
 %  Options.Kappa : Weight of external image force, default 2
+%
+%
+% Literature:
+%   - Michael Kass, Andrew Witkin and Demetri TerzoPoulos "Snakes : Active
+%       Contour Models", 1987
+%   - Jim Ivins amd John Porrill, "Everything you always wanted to know
+%       about snakes (but wer afraid to ask)
+%   - Chenyang Xu and Jerry L. Prince, "Gradient Vector Flow: A New
+%       external force for Snakes
+%
+% Example, Basic:
+%
 
+% writerObj=VideoWriter('SnakeMotion.avi');
+% writerObj.FrameRate = 10;
+% open(writerObj);
+
+% % %   I = imread('test.png'); 
+%   ind_u = 1:9; 
+%   ind_p = 1; 
+%   x0Temp=x0(:,:,ind_u); 
+%   y0Temp=y0(:,:,ind_u); 
+%   I = binField(:,:,ind_u);  
+%   iteration = 100; 
+%   P = trajectStart(:,:,ind_u); 
+%   figure(100), imshow(I(:,:,ind_p)); view(0, 90); 
+% % %   [y,x] = getpts;
+% % %   P=[x(:) y(:)];
+%   hold; 
+%   plot3(x0Temp(ind_p), y0Temp(ind_p), ones(size(x0Temp(ind_p))), 'rs'); 
+%   h=plot(P(:, 2, ind_p),P(:, 1, ind_p),'r.'); 
+  
   PIni=P; 
   Options=struct;
   Options.Verbose=true;

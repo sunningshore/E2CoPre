@@ -20,6 +20,8 @@ function J=DrawSegmentedArea2D(P,Isize)
 %   figure, imshow(J); 
 %   hold on; plot([P(:,2);P(1,2)],[P(:,1);P(1,1)]);
 %
+% Function is written by D.Kroon University of Twente (July 2010)
+
 
 J=false(Isize+2);
 % Loop through all line coordinates

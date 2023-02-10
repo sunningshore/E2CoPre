@@ -14,6 +14,8 @@ function Fext=GVFOptimizeImageForces2D(Fext, Mu, Iterations, Sigma)
 % outputs,
 %   Fext : The GVF optimized image force vector field
 %
+% Function is written by D.Kroon University of Twente (July 2010)
+
 % Iterations=100; 
 % Mu=.2; 
 % Fext=[]; 

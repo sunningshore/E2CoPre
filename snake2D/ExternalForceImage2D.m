@@ -12,6 +12,8 @@ function Eextern = ExternalForceImage2D(I, Wline, Wedge, Wterm,Sigma)
 % outputs,
 %  Eextern : The energy function described by the image
 %
+% Function is written by D.Kroon University of Twente (July 2010)
+
 Ix=ImageDerivatives2D(I,Sigma,'x');
 Iy=ImageDerivatives2D(I,Sigma,'y');
 Ixx=ImageDerivatives2D(I,Sigma,'xx');

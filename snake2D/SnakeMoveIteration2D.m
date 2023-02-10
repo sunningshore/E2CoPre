@@ -14,6 +14,7 @@ function P=SnakeMoveIteration2D(B,P,Fext,gamma,kappa,delta,ExpdContFlag)
 % outputs,
 %   P : The (moved) contour points N x 2;
 %
+% Function is written by D.Kroon University of Twente (July 2010)
 % B=S; 
 % P=P(:,:,flagEvolving); 
 % Fext=Fext; 

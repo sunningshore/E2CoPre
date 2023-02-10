@@ -18,6 +18,117 @@ function [K1 KN ERR]=SeparateKernel(H)
 %   ERR : The sum of absolute difference between approximation and input kernel
 %
 % 
+% How the algorithm works:
+% If we have a separable kernel like
+% 
+%  H = [1 2 1
+%       2 4 2
+%       3 6 3];
+%
+% We like to solve unknow 1D kernels,
+%  a=[a(1) a(2) a(3)]
+%  b=[b(1) b(2) b(3)]
+%
+% We know that,
+%  H = a'*b
+%
+%       b(1)    b(2)    b(3)
+%       --------------------
+%  a(1)|h(1,1) h(1,2) h(1,3)
+%  a(2)|h(2,1) h(2,2) h(2,3)
+%  a(3)|h(3,1) h(3,2) h(3,3)
+%
+% Thus,
+%  h(1,1) == a(1)*b(1)
+%  h(2,1) == a(2)*b(1)
+%  h(3,1) == a(3)*b(1)
+%  h(4,1) == a(1)*b(2)
+%  ...
+%
+% We want to solve this by using fast matrix (least squares) math,
+%
+%  c = M * d; 
+%  
+%  c a column vector with all kernel values H
+%  d a column vector with the unknown 1D kernels 
+%
+% But matrices "add" values and we have something like  h(1,1) == a(1)*b(1);
+% We solve this by taking the log at both sides 
+% (We replace zeros by a small value. Whole lines/planes of zeros are
+%  removed at forehand and re-added afterwards)
+%
+%  log( h(1,1) ) == log(a(1)) + log b(1))
+%
+% The matrix is something like this,
+%
+%      a1 a2 a3 b1 b2 b3    
+% M = [1  0  0  1  0  0;  h11
+%      0  1  0  1  0  0;  h21
+%      0  0  1  1  0  0;  h31
+%      1  0  0  0  1  0;  h21
+%      0  1  0  0  1  0;  h22
+%      0  0  1  0  1  0;  h23
+%      1  0  0  0  0  1;  h31
+%      0  1  0  0  0  1;  h32
+%      0  0  1  0  0  1]; h33
+%
+% Least squares solution
+%  d = exp(M\log(c))
+%
+% with the 1D kernels
+%
+%  [a(1);a(2);a(3);b(1);b(2);b(3)] = d
+%
+% The Problem of Negative Values!!!
+%
+% The log of a negative value is possible it gives a complex value, log(-1) = i*pi
+% if we take the expontential it is back to the old value, exp(i*pi) = -1 
+%
+%  But if we use the solver with on of the 1D vectors we get something like, this :
+%
+%  input         result        abs(result)    angle(result) 
+%   -1     -0.0026 + 0.0125i     0.0128         1.7744 
+%    2      0.0117 + 0.0228i     0.0256         1.0958 
+%   -3     -0.0078 + 0.0376i     0.0384         1.7744  
+%    4      0.0234 + 0.0455i     0.0512         1.0958
+%    5      0.0293 + 0.0569i     0.0640         1.0958
+% 
+% The absolute value is indeed correct (difference in scale is compensated
+% by the order 1D vectors)
+%
+% As you can see the angle is correlated with the sign of the values. But I
+% didn't found the correlation yet. For some matrices it is something like
+%
+%  sign=mod(angle(solution)*scale,pi) == pi/2;
+%
+% In the current algorithm, we just flip the 1D kernel values one by one.
+% The sign change which gives the smallest error is permanently swapped. 
+% Until swapping signs no longer decreases the error
+%
+% Examples,
+%   a=permute(rand(5,1),[1 2 3 4])-0.5;
+%   b=permute(rand(5,1),[2 1 3 4])-0.5;
+%   c=permute(rand(5,1),[3 2 1 4])-0.5;
+%   d=permute(rand(5,1),[4 2 3 1])-0.5;
+%   H = repmat(a,[1 5 5 5]).*repmat(b,[5 1 5 5]).*repmat(c,[5 5 1 5]).*repmat(d,[5 5 5 1]);
+%   [K,KN,err]=SeparateKernel(H);
+%   disp(['Summed Absolute Error between Real and approximation by 1D filters : ' num2str(err)]);
+%
+%   a=permute(rand(3,1),[1 2 3])-0.5;
+%   b=permute(rand(3,1),[2 1 3])-0.5;
+%   c=permute(rand(3,1),[3 2 1])-0.5;
+%   H = repmat(a,[1 3 3]).*repmat(b,[3 1 3 ]).*repmat(c,[3 3 1 ])
+%   [K,KN,err]=SeparateKernel(H); err
+%
+%   a=permute(rand(4,1),[1 2 3])-0.5;
+%   b=permute(rand(4,1),[2 1 3])-0.5;
+%   H = repmat(a,[1 4]).*repmat(b,[4 1]);
+%   [K,KN,err]=SeparateKernel(H); err
+%
+% Function is written by D.Kroon, uses "log idea" from A. J. Hendrikse, 
+% University of Twente (July 2010)
+
+
 % We first make some structure which contains information about
 % the transformation from kernel to 1D kernel array, number of dimensions
 % and other stuff
