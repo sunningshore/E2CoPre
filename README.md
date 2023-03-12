@@ -1,4 +1,4 @@
-## E2CoPre
+## $E^2CoPre$
 This is the code repository for the paper $E^2CoPre$: Energy Efficient and Cooperative Collision Avoidance for UAV Swarms with Trajectory Prediction. 
 
 Acknowledgement: this code is partially build on previous works as follows. 
